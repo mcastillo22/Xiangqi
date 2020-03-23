@@ -272,24 +272,21 @@ class XiangqiGame:
 
                 # Convert input to  position on board
                 conversion_alpha = 'abcdefghi'
-                conversion_num = '123456789'
 
-                # Check out of bounds play
-                if len(board_position) == 1 or board_position[0] not in conversion_alpha or \
-                        board_position[1] not in conversion_num:
+                if 2 <= len(board_position) <= 3 and board_position[0] in conversion_alpha:
+
+                    # Check if rank is valid:
+                    if len(board_position) > 2:
+                        if int(board_position[2]) != 0 or int(board_position[1]) > 1:
+                            return False
+
+                    file = conversion_alpha.index(board_position[0])
+                    rank = int(board_position[1:]) - 1
+
+                    return [rank, file]
+
+                else:
                     return False
-                # Check if rank is valid:
-                if len(board_position) > 2:
-                    if int(board_position[2]) != 0 or int(board_position[1]) > 1:
-                        return False
-
-                file = conversion_alpha.index(board_position[0])
-                rank = int(board_position[1]) - 1
-
-                # If board rank position is 10:
-                if len(board_position) == 3 and int(board_position[1]) == 1 and int(board_position[2]) == 0:
-                    rank = 9
-                return [rank, file]
 
             # Convert current position to numerical version
             current_pos = convert(current)
@@ -328,6 +325,10 @@ class XiangqiGame:
                                and piece_in_new_spot.get_color() is not None
 
                     if capture_move:
+
+                        # If opposing General is captured:
+                        if piece_in_new_spot.get_title() == 'G':
+                            self.update_game_state(self.get_turn())
 
                         # Add captured piece to captured pieces list
                         self._captured_pieces.append(piece_in_new_spot)
@@ -383,7 +384,7 @@ class XiangqiGame:
 
         def print_red(piece):
             """Print red pieces in RED"""
-            print("\033[37;1;41m{}\033[000000m".format(piece), end="")
+            print("\033[1;41m{}\033[000000m".format(piece), end="")
 
         def print_black(piece):
             """Print black pieces in YELLOW (for dark themed consoles)"""
