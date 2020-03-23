@@ -1,5 +1,3 @@
-
-
 class Piece:
     """Creates a Piece object for the Xiangqi game class. All pieces inherit from this class.
     A generic Piece will fill blank spaces on the game board."""
@@ -273,7 +271,7 @@ class Rook(Piece):
 
         # Check if move is horizontal or vertical
         vertical = desired_position[0] != rank and desired_position[1] == file
-        horizontal = desired_position[1] != rank and desired_position[0] == rank
+        horizontal = desired_position[1] != file and desired_position[0] == rank
 
         # Check if move is valid
         if vertical:

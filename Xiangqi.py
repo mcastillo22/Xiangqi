@@ -29,7 +29,6 @@ class XiangqiGame:
         """Initialize game state, checkmate status, turn, captured pieces, playing pieces, and board"""
 
         self._game_state = 'UNFINISHED'
-        self._checkmate = False
         self._turn = 0
         self._captured_pieces = []
         self._board = [[Piece() for file in range(9)] for rank in range(10)]
@@ -82,6 +81,15 @@ class XiangqiGame:
             rank = piece.get_position()[0]
             file = piece.get_position()[1]
             self._board[rank][file] = piece
+
+        # For debugging:
+
+        self._debug_mode = False
+        self._bcheck = False
+        self._rcheck = False
+
+    def set_debug_mode(self, dbool):
+        self._debug_mode = dbool
 
     def add_turn(self):
         """Adds a single turn to the game."""
@@ -238,12 +246,7 @@ class XiangqiGame:
             return False
 
         # Otherwise, return True
-        self._checkmate = True
         return True
-
-    def get_checkmate(self):
-        """Returns if there has been a checkmate"""
-        return self._checkmate
 
     def get_pieces(self, color=None):
         """Returns a list of pieces that are in play in the board.
@@ -299,7 +302,7 @@ class XiangqiGame:
             moving_piece = self._board[current_pos[0]][current_pos[1]]
 
             # Validate that the moving piece matches whose turn it is
-            if self.get_turn() == moving_piece.get_color():
+            if self.get_turn() == moving_piece.get_color() or self._debug_mode is True:
 
                 # Convert desired position to numerical version
                 new_pos = convert(new)
@@ -369,6 +372,10 @@ class XiangqiGame:
                     if self.check_for_checkmate_stalemate(self.get_turn()):
                         self._turn -= 1
                         self.update_game_state(self.get_turn())
+
+                    # For debugging:
+                    self._rcheck = self.is_in_check('red')
+                    self._bcheck = self.is_in_check('black')
 
                     return True
 
