@@ -13,7 +13,8 @@ class TestProjects(unittest.TestCase):
         """Test full game with two checks"""
 
         fullgame = XiangqiGame()
-        
+        fullgame.set_CLI_mode(True)
+
         move = fullgame.make_move('i1', 'i2')
         move = fullgame.make_move('h8', 'h1')
 
