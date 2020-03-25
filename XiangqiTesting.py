@@ -9,6 +9,18 @@ from Xiangqi import XiangqiGame
 print()
 
 class TestProjects(unittest.TestCase):
+
+    def test_helper(self):
+        """Test helper mode"""
+
+        part_game = XiangqiGame()
+        part_game.set_debug_mode(True)
+
+        part_game.print_board()
+
+        part_game.set_helper_mode(True)
+        part_game.hlpr_list_moves('a1')
+
     def test_quick_game(self):
         """Test full game with two checks"""
 
@@ -305,8 +317,10 @@ class TestProjects(unittest.TestCase):
         part_game.set_debug_mode(True)
 
         # Cannon
-        part_game.make_move('b3', 'b10')
-        part_game.make_move('b10', 'd10')
+        part_game.make_move('b8', 'e8')
+        part_game.make_move('h3', 'h5')
+        part_game.make_move('b3', 'b2')
+        part_game.make_move('b2', 'd2')
 
         # Advisor
         part_game.make_move('f1', 'e2')
@@ -316,18 +330,48 @@ class TestProjects(unittest.TestCase):
         # Rook
         part_game.make_move('a1', 'a2')
         part_game.make_move('a2', 'i2')
+        part_game.make_move('a10', 'a9')
+        part_game.make_move('i2', 'f2')
+        part_game.make_move('f2', 'f4')
+        part_game.make_move('d3', 'e2')
 
         # Horse
         part_game.make_move('b1', 'a3')
         part_game.make_move('a3', 'c2')
+        false_horse = part_game.make_move('h1', 'f2')
+        self.assertFalse(false_horse)
 
         # Elephant
-        part_game.make_move('g1', 'i3')
-        part_game.make_move('i3', 'g5')
+        part_game.make_move('c1', 'a3')
+        part_game.make_move('a3', 'c5')
+        part_game.make_move('g1', 'e3')
+
+        part_game.make_move('h1', 'i3')
+
+        # Soldier
+        part_game.make_move('e7', 'e6')
+        part_game.make_move('e6', 'e5')
+        part_game.make_move('e5', 'd5')
+        part_game.make_move('d5', 'd4')
+        part_game.make_move('d4', 'd3')
 
         # General
         part_game.make_move('e1', 'f1')
         gen_false = part_game.make_move('f1', 'g1')
+
+        part_game.make_move('e2', 'f3')
+        part_game.make_move('d2', 'e2')
+
+        part_game.make_move('e2', 'e1')
+        part_game.make_move('a9', 'f9')
+        part_game.make_move('f9', 'f4')
+        part_game.add_turn()
+        part_game.make_move('e8', 'e3')
+        part_game.add_turn()
+        part_game.make_move('f4', 'f3')
+
+        print(part_game.check_for_checkmate_stalemate('red'))
+        print(part_game.is_in_check('red'))
 
         part_game.print_board()
 

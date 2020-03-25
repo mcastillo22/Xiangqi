@@ -9,7 +9,7 @@ from XiangqiPieces import Piece, General, Advisor, Elephant, Horse, Rook, Cannon
 
 class XiangqiGame:
     """
-    Version 0.8
+    Version 1.0
     An object of a text-based game of Xiangqi- a battle between two armies with the goal of capturing the enemy's
     general. A river separates the two armies, and affects Piece movement. Generals and Advisors are limited to their
     respective palace. This game is also known as Chinese Chess.
@@ -82,11 +82,19 @@ class XiangqiGame:
             file = piece.get_position()[1]
             self._board[rank][file] = piece
 
-        # For debugging:
+        # Modes:
+        self._CLI_mode = False
+        self._helper_mode = False
 
         self._debug_mode = False
         self._bcheck = False
         self._rcheck = False
+
+    def set_CLI_mode(self, cbool):
+        self._CLI_mode = cbool
+
+    def set_helper_mode(self, hbool):
+        self._helper_mode = hbool
 
     def set_debug_mode(self, dbool):
         self._debug_mode = dbool
@@ -103,6 +111,20 @@ class XiangqiGame:
             return 'red'
         else:
             return 'black'
+
+    def get_pieces(self, color=None):
+        """Returns a list of pieces that are in play in the board.
+        (This means that captured pieces are no longer included)."""
+
+        pieces = self._pieces
+
+        if color == 'red':
+            pieces = [piece for piece in self._pieces if piece.get_color() == 'red']
+
+        elif color == 'black':
+            pieces = [piece for piece in self._pieces if piece.get_color() == 'black']
+
+        return pieces
 
     def update_game_state(self, player):
         """Updates game state: 'UNFINISHED'; 'RED_WON' or 'BLACK_WON' if there is a checkmate."""
@@ -124,14 +146,14 @@ class XiangqiGame:
             opposing = 'red'
 
         # Get player's General's position
-        position = [gen.get_position() for gen in self.get_pieces(player) if gen.get_title()[1] == 'G']
-        position = position[0]
+        gen_position = [gen.get_position() for gen in self.get_pieces(player) if gen.get_title()[1] == 'G']
+        gen_position = gen_position[0]
 
         # Get all opposing pieces in play
         opposing_moves = [om.get_position() for om in self.get_pieces(opposing)]
 
         # Determine if opposing pieces can capture the General
-        captures_gen = [self.check_move(piece, position) for piece in opposing_moves]
+        captures_gen = [self.check_move(piece, gen_position) for piece in opposing_moves]
 
         if True in captures_gen:
             return True
@@ -166,6 +188,56 @@ class XiangqiGame:
         else:
             return False
 
+    def check_for_checkmate_stalemate(self, player):
+        """Checks to see if there are any valid moves left. If there are, see if there are moves that take their
+        General out of check for all active pieces of the given player"""
+
+        # Get a dictionary of active pieces, their position, and their possible movesets
+        #   Dictionary is solely for debugging purposes
+        pieces = [[piece, piece.get_position(), piece.get_moves()] for piece in self.get_pieces(player)]
+
+        # Check that for each of the player's active pieces, it has legal moves
+        checkmate_results = {}
+        stalemate_results = []
+        for piece in pieces:
+
+            # If piece has available moves
+            if piece[2] is not None:
+                checkmate_results[str(piece[1])] = []
+
+                # Iterate through each potential move
+                for i in range(len(piece[2])-1):
+                    temp = piece[1]
+
+                    # If move is valid, check if player is in check
+                    if self.check_move(piece[1], piece[2][i]):
+                        piece[0].update_position(piece[2][i])
+                        in_check = self.is_in_check(player)
+                        piece[0].update_position(temp)
+
+                        # If a valid move has been found that does not result in check, return False
+                        if not in_check:
+                            checkmate_results[str(piece[1])].append(piece[2][i])
+                            checkmate_results[str(piece[1])].append(in_check)
+                            return False
+
+                        # If valid move, but leads to a check, add False to stalemate
+                        stalemate_results.append(False)
+
+                    else:
+                        stalemate_results.append(None)
+
+        # If in check, check if opposing piece can be captured
+        if self.opposing_can_be_captured(player):
+            return False
+
+        # If a valid move is found, stalemate did not occur
+        if True in stalemate_results:
+            return False
+
+        # Otherwise, return True
+        return True
+
     def opposing_can_be_captured(self, player):
         """If a player is in check, this method determines if a move can be made to capture the attacking piece(s)."""
 
@@ -198,101 +270,37 @@ class XiangqiGame:
 
         return False
 
-    def check_for_checkmate_stalemate(self, player):
-        """Checks to see if there are any valid moves left. If there are, see if there are moves that take their
-        General out of check for all active pieces of the given player"""
+    def convert(self, board_position):
+        """Helper function to convert given board position (file, rank) to numerical value [rank, file]
+        Input columns are letters a-i, and input rows are numbers 1-10.
 
-        # Get a dictionary of active pieces, their position, and their possible movesets
-        #   Dictionary is solely for debugging purposes
-        pieces = [[piece, piece.get_position(), piece.get_moves()] for piece in self.get_pieces(player)]
+        For example: 'a1' is equivalent to [0][0]; 'e10' is [9][4]"""
 
-        # Check that for each of the player's actives pieces, it has legal moves
-        checkmate_results = {}
-        stalemate_results = []
-        for piece in pieces:
+        # Convert input to  position on board
+        conversion_alpha = 'abcdefghi'
 
-            # If piece has available moves
-            if piece[2] is not None:
-                checkmate_results[str(piece[1])] = []
+        if 2 <= len(board_position) <= 3 and board_position[0] in conversion_alpha:
 
-                # Iterate through each potential move
-                for i in range(len(piece[2])-1):
-                    temp = piece[1]
-                    checkmate_results[str(piece[1])].append(piece[2][i])
+            # Check if rank is valid:
+            if len(board_position) > 2:
+                if int(board_position[2]) != 0 or int(board_position[1]) > 1:
+                    return False
 
-                    # If move is valid, check if player is in check
-                    if self.check_move(piece[1], piece[2][i]):
-                        piece[0].update_position(piece[2][i])
-                        in_check = self.is_in_check(player)
-                        checkmate_results[str(piece[1])].append(in_check)
-                        piece[0].update_position(temp)
+            file = conversion_alpha.index(board_position[0])
+            rank = int(board_position[1:]) - 1
 
-                        # If a valid move has been found that does not result in check, return False
-                        if not in_check:
-                            return False
+            return [rank, file]
 
-                        # If valid move, but leads to a check, add False to stalemate
-                        stalemate_results.append(False)
-
-                    else:
-                        stalemate_results.append(None)
-
-        # If in check, check if opposing piece can be captured
-        if self.opposing_can_be_captured(player):
+        else:
             return False
-
-        # If a valid move is found, stalemate did not occur
-        if True in stalemate_results:
-            return False
-
-        # Otherwise, return True
-        return True
-
-    def get_pieces(self, color=None):
-        """Returns a list of pieces that are in play in the board.
-        (This means that captured pieces are no longer included)."""
-
-        pieces = self._pieces
-
-        if color == 'red':
-            pieces = [piece for piece in self._pieces if piece.get_color() == 'red']
-
-        elif color == 'black':
-            pieces = [piece for piece in self._pieces if piece.get_color() == 'black']
-
-        return pieces
 
     def make_move(self, current, new):
         """Takes two strings as two positions ('current' moves to 'new') and checks the validity of the proposed move"""
 
         if self.get_game_state() == 'UNFINISHED':
 
-            def convert(board_position):
-                """Helper function to convert given board position (file, rank) to numerical value [rank, file]
-                Input columns are letters a-i, and input rows are numbers 1-10.
-
-                For example: 'a1' is equivalent to [0][0]; 'e10' is [9][4]"""
-
-                # Convert input to  position on board
-                conversion_alpha = 'abcdefghi'
-
-                if 2 <= len(board_position) <= 3 and board_position[0] in conversion_alpha:
-
-                    # Check if rank is valid:
-                    if len(board_position) > 2:
-                        if int(board_position[2]) != 0 or int(board_position[1]) > 1:
-                            return False
-
-                    file = conversion_alpha.index(board_position[0])
-                    rank = int(board_position[1:]) - 1
-
-                    return [rank, file]
-
-                else:
-                    return False
-
             # Convert current position to numerical version
-            current_pos = convert(current)
+            current_pos = self.convert(current)
 
             # If position is out of bounds, return False
             if current_pos is False:
@@ -301,11 +309,14 @@ class XiangqiGame:
             # Get piece to be moved
             moving_piece = self._board[current_pos[0]][current_pos[1]]
 
+            if moving_piece.get_color() is None:
+                return False
+
             # Validate that the moving piece matches whose turn it is
             if self.get_turn() == moving_piece.get_color() or self._debug_mode is True:
 
                 # Convert desired position to numerical version
-                new_pos = convert(new)
+                new_pos = self.convert(new)
 
                 # If position is out of bounds, return False
                 if new_pos is False:
@@ -329,6 +340,10 @@ class XiangqiGame:
 
                     if capture_move:
 
+                        if self._CLI_mode:
+                            print(moving_piece.get_name(moving_piece.get_title()) + ' captures '
+                                  + (piece_in_new_spot.get_name(piece_in_new_spot.get_title())) + '!')
+
                         # If opposing General is captured:
                         if piece_in_new_spot.get_title() == 'G':
                             self.update_game_state(self.get_turn())
@@ -349,6 +364,9 @@ class XiangqiGame:
                     # Prevent player from making a move that puts themselves in check
                     if self.is_in_check(self.get_turn()):
 
+                        if self._CLI_mode:
+                            print('Cannot put self in check!')
+
                         # Undo board changes
                         if capture_move:
                             # Undo Add captured piece to captured pieces list
@@ -368,10 +386,15 @@ class XiangqiGame:
 
                     self.add_turn()
 
+                    if self._CLI_mode and self.is_in_check(self.get_turn()):
+                        print(self.get_turn().title(), 'in check!')
+
                     # Update game state by checking if there is a checkmate or stalemate
                     if self.check_for_checkmate_stalemate(self.get_turn()):
                         self._turn -= 1
                         self.update_game_state(self.get_turn())
+                        if self._CLI_mode:
+                            print(self.get_game_state())
 
                     # For debugging:
                     self._rcheck = self.is_in_check('red')
@@ -391,7 +414,7 @@ class XiangqiGame:
 
         def print_red(piece):
             """Print red pieces in RED"""
-            print("\033[1;41m{}\033[000000m".format(piece), end="")
+            print("\033[37;1;41m{}\033[000000m".format(piece), end="")
 
         def print_black(piece):
             """Print black pieces in YELLOW (for dark themed consoles)"""
@@ -421,7 +444,7 @@ class XiangqiGame:
             print(' ' + file, end='  ')
         print("\n")
 
-        # Print Red army side
+        # Print half of board
         for i in range(5):
             for j in range(8):
                 if self._board[i][j].get_color() == 'red':
@@ -445,7 +468,7 @@ class XiangqiGame:
         # Print River
         print("\033[34;1m {}\033[00m".format(str(' ' * 14) + 'RIVER'))
 
-        # Print Black army side
+        # Print half of board
         for i in range(5, 10):
             for j in range(8):
                 if self._board[i][j].get_color() == 'red':
@@ -464,10 +487,22 @@ class XiangqiGame:
                 print('[ ]', end='')
             print_connections(i + 1)
 
+    def hlpr_list_moves(self, position):
+        if self._helper_mode:
+            piece = self._board[position[0]][position[1]]
+            avail_moves = piece.get_moves()
+            legal_moves = [x for x in avail_moves if self.check_move(position, x)]
+            legal_moves.sort()
+
+            print(legal_moves)
+
+        else:
+            return False
+
+
 
 def main():
-    game = XiangqiGame()
-    game.print_board()
+    return True
 
 
 if __name__ == '__main__':

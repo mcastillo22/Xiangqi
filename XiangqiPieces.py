@@ -12,6 +12,17 @@ class Piece:
         self._is_captured = False
         self._available_moves = None
 
+        self._names = {' R ': 'Rook',
+                       ' H ': 'Horse',
+                       ' E ': 'Elephant',
+                       ' A ': 'Advisor',
+                       ' G ': 'General',
+                       ' C ': 'Cannon',
+                       ' S ': 'Soldier'}
+
+    def get_name(self, title):
+        return self._names[title]
+
     def get_title(self):
         """Returns the Piece's given name. This name appears on the game board when printed to the console."""
         return self._title
@@ -100,6 +111,13 @@ class Piece:
 
     def get_moves(self):
         """Returns the Piece's moveset"""
+        if self.get_position() is not None:
+            rank = self.get_position()[0]
+            file = self.get_position()[1]
+
+            self._available_moves = [[rank, j] for j in range(9)]
+            self._available_moves.extend([[i, file] for i in range(10)])
+
         return self._available_moves
 
     def move(self, desired_position, pieces):
@@ -222,9 +240,8 @@ class Horse(Piece):
     def get_moves(self):
         """Returns the moveset of the Horse"""
 
-        current_pos = self.get_position()
-        rank = current_pos[0]
-        file = current_pos[1]
+        rank = self.get_position()[0]
+        file = self.get_position()[1]
 
         self._available_moves = [[rank + 2, file + 1], [rank + 2, file - 1], [rank - 2, file + 1], [rank - 2, file - 1],
                                  [rank + 1, file + 2], [rank + 1, file - 2], [rank - 1, file + 2], [rank - 1, file - 2]]
