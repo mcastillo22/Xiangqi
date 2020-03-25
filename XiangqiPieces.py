@@ -340,7 +340,7 @@ class Cannon(Piece):
 
         # Check if move is horizontal or vertical
         vertical = desired_position[0] != rank and desired_position[1] == file
-        horizontal = desired_position[1] != rank and desired_position[0] == rank
+        horizontal = desired_position[0] == rank and desired_position[1] != file
 
         # Check if move is a capture move
         piece_in_target = [piece.get_color() for piece in pieces if piece.get_position() == desired_position]

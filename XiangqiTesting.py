@@ -15,11 +15,14 @@ class TestProjects(unittest.TestCase):
 
         part_game = XiangqiGame()
         part_game.set_debug_mode(True)
+        part_game.set_helper_mode(True)
+
+        moves = part_game.hlpr_list_moves([0,0])
+
+        print(moves)
+        self.assertEqual(['a2', 'a3'], moves)
 
         part_game.print_board()
-
-        part_game.set_helper_mode(True)
-        part_game.hlpr_list_moves('a1')
 
     def test_quick_game(self):
         """Test full game with two checks"""

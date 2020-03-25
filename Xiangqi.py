@@ -128,7 +128,6 @@ class XiangqiGame:
 
     def update_game_state(self, player):
         """Updates game state: 'UNFINISHED'; 'RED_WON' or 'BLACK_WON' if there is a checkmate."""
-
         self._game_state = player.upper() + '_WON'
         return True
 
@@ -136,9 +135,17 @@ class XiangqiGame:
         """Returns game state: 'UNFINISHED'; 'RED_WON' or 'BLACK_WON' if there is a checkmate."""
         return self._game_state
 
+    def get_piece_at_pos(self, position):
+        """Returns the piece at the given position"""
+        if position and (0 <= position[0] < 10) and (0 <= position[1] < 9):
+            moving_piece = self._board[position[0]][position[1]]
+            return moving_piece
+
+        else:
+            return False
+
     def is_in_check(self, player):
-        """Determines if a player is in check.
-        This means the General is in a position that allows them to be captured"""
+        """Determines if a player is in check- the General is in a position that allows them to be captured"""
 
         if player == 'red':
             opposing = 'black'
@@ -153,9 +160,9 @@ class XiangqiGame:
         opposing_moves = [om.get_position() for om in self.get_pieces(opposing)]
 
         # Determine if opposing pieces can capture the General
-        captures_gen = [self.check_move(piece, gen_position) for piece in opposing_moves]
+        captures_gen = [piece for piece in opposing_moves if self.check_move(piece, gen_position)]
 
-        if True in captures_gen:
+        if captures_gen:
             return True
         else:
             return False
@@ -169,8 +176,10 @@ class XiangqiGame:
         if (0 <= target_position[0] < 10) and (0 <= target_position[1] < 9):
 
             # Check target position does not have a piece of the same army
-            moving_piece = self._board[piece_position[0]][piece_position[1]]
-            if self._board[target_position[0]][target_position[1]].get_color() != moving_piece.get_color():
+            moving_piece = self.get_piece_at_pos(piece_position)
+            target_piece = self.get_piece_at_pos(target_position)
+
+            if target_piece.get_color() != moving_piece.get_color():
 
                 temp = moving_piece.get_position()
 
@@ -294,6 +303,16 @@ class XiangqiGame:
         else:
             return False
 
+    def convert_to_user(self, position):
+        no_keys = [x for x in range(10)]
+        alpha_vals = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+
+        board = dict(zip(no_keys, alpha_vals))
+
+        converted = str(board[position[1]] + str(position[0]+1))
+
+        return converted
+
     def make_move(self, current, new):
         """Takes two strings as two positions ('current' moves to 'new') and checks the validity of the proposed move"""
 
@@ -307,7 +326,7 @@ class XiangqiGame:
                 return False
 
             # Get piece to be moved
-            moving_piece = self._board[current_pos[0]][current_pos[1]]
+            moving_piece = self.get_piece_at_pos(current_pos)
 
             if moving_piece.get_color() is None:
                 return False
@@ -323,7 +342,7 @@ class XiangqiGame:
                     return False
 
                 # Get piece in desired spot
-                piece_in_new_spot = self._board[new_pos[0]][new_pos[1]]
+                piece_in_new_spot = self.get_piece_at_pos(new_pos)
 
                 # Determine if piece in target position belongs to same army (cannot capture own army)
                 if piece_in_new_spot.get_color() == moving_piece.get_color():
@@ -494,11 +513,12 @@ class XiangqiGame:
             legal_moves = [x for x in avail_moves if self.check_move(position, x)]
             legal_moves.sort()
 
-            print(legal_moves)
+            conv_legal_moves = [self.convert_to_user(m) for m in legal_moves]
+
+            return conv_legal_moves
 
         else:
             return False
-
 
 
 def main():
