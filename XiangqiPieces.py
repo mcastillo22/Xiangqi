@@ -37,10 +37,13 @@ class Piece:
 
     def update_position(self, position):
         """Updates the Piece's position to the passed position on the board."""
+        if position is None:
+            self._position = None
 
-        new_rank = position[0]
-        new_file = position[1]
-        self._position = [new_rank, new_file]
+        else:
+            new_rank = position[0]
+            new_file = position[1]
+            self._position = [new_rank, new_file]
 
     def captured(self, pieces):
         """When a piece is captured, it is removed from the board and its position is reset."""
@@ -378,17 +381,19 @@ class Soldier(Piece):
 
     def update_position(self, position):
         """Updates position and takes into account if piece is across the river"""
+        if position is None:
+            self._position = None
+        else:
+            new_file = position[1]
+            new_rank = position[0]
+            self._position = [new_rank, new_file]
 
-        new_file = position[1]
-        new_rank = position[0]
-        self._position = [new_rank, new_file]
+            # If soldier has crossed the river, update River Status
+            if self.get_position()[0] >= 5 and self.get_color() == 'red':
+                self._is_past_river = True
 
-        # If soldier has crossed the river, update River Status
-        if self.get_position()[0] >= 5 and self.get_color() == 'red':
-            self._is_past_river = True
-
-        if self.get_position()[0] <= 4 and self.get_color() == 'black':
-            self._is_past_river = True
+            if self.get_position()[0] <= 4 and self.get_color() == 'black':
+                self._is_past_river = True
 
     def get_moves(self):
         """Allows one move forward. If the piece is past the river, it can move one point horizontally as well."""

@@ -7,7 +7,7 @@ def main():
     game.set_CLI_mode(True)
     print(' >> Xiangqi 2GO v1')
 
-    helper = input('\tTurn on helper mode? ')
+    helper = input('\tTurn on helper mode? (Helper mode will display all legal moves for a piece) ')
 
     if helper.lower() in ['y', 'yes']:
         game.set_helper_mode(True)
@@ -19,7 +19,7 @@ def main():
     else:
         print('Helper mode is off.\n')
 
-    print("Note: Please format moves as \'a1, a3\'. Red will go first.\nEnter '0' or 'quit' to exit")
+    print("Note: Please format moves as \'a1, a3\'. Red will go first.\n\t  Enter '0' or 'quit' anytime exit")
     game.print_board()
     print()
 

@@ -217,12 +217,18 @@ class XiangqiGame:
                 # Iterate through each potential move
                 for i in range(len(piece[2])-1):
                     temp = piece[1]
+                    temp2 = piece[2][i]
 
                     # If move is valid, check if player is in check
                     if self.check_move(piece[1], piece[2][i]):
                         piece[0].update_position(piece[2][i])
+                        targ_piece = self.get_piece_at_pos(temp2)
+                        if targ_piece.get_color() is not None:
+                            self._pieces.remove(targ_piece)
                         in_check = self.is_in_check(player)
                         piece[0].update_position(temp)
+                        if targ_piece.get_color() is not None:
+                            self._pieces.append(targ_piece)
 
                         # If a valid move has been found that does not result in check, return False
                         if not in_check:
@@ -288,18 +294,16 @@ class XiangqiGame:
         # Convert input to  position on board
         conversion_alpha = 'abcdefghi'
 
-        if 2 <= len(board_position) <= 3 and board_position[0] in conversion_alpha:
-
-            # Check if rank is valid:
-            if len(board_position) > 2:
-                if int(board_position[2]) != 0 or int(board_position[1]) > 1:
-                    return False
+        if board_position[0] in conversion_alpha:
 
             file = conversion_alpha.index(board_position[0])
             rank = int(board_position[1:]) - 1
 
-            return [rank, file]
+            if 0 <= rank <= 9:
+                return [rank, file]
 
+            else:
+                return False
         else:
             return False
 
@@ -380,6 +384,9 @@ class XiangqiGame:
                     moving_piece.update_position(new_pos)
                     self._board[new_pos[0]][new_pos[1]] = moving_piece
 
+                    if self._debug_mode:
+                        self.print_board()
+
                     # Prevent player from making a move that puts themselves in check
                     if self.is_in_check(self.get_turn()):
 
@@ -393,8 +400,9 @@ class XiangqiGame:
                             self._captured_pieces.remove(piece_in_new_spot)
                             # Undo Update captured piece's information
                             piece_in_new_spot.undo_capture()
+                            self._pieces.append(piece_in_new_spot)
 
-                        # Undo Update board positions
+                        # Undo update board positions
                         self._board[current_pos[0]][current_pos[1]] = moving_piece
                         moving_piece.update_position(current_pos)
 
@@ -443,15 +451,15 @@ class XiangqiGame:
             """Print ASCII representation of spaces between positions on the board"""
 
             intersections = ' |   |   |   |   |   |   |   |   |'
-            intersections_b = ' |   |   |   | / | \\ |   |   |   |'
-            intersections_a = ' |   |   |   | \\ | / |   |   |   |'
+            intersections_a = ' |   |   |   | / | \\ |   |   |   |'
+            intersections_b = ' |   |   |   | \\ | / |   |   |   |'
 
-            print(' \t' + str(rank))
+            print(' \t' + str(rank + 1))
             if rank in [1, 8]:
                 print(intersections_a)
             elif rank in [2, 9]:
                 print(intersections_b)
-            elif rank in [5, 10]:
+            elif rank in [0, 5]:
                 return None
             else:
                 print(intersections)
@@ -464,7 +472,29 @@ class XiangqiGame:
         print("\n")
 
         # Print half of board
-        for i in range(5):
+        for i in range(9, 4, -1):
+            for j in range(8):
+                if self._board[i][j].get_color() == 'red':
+                    print_red(str(self._board[i][j].get_title()))
+                elif self._board[i][j].get_color() == 'black':
+                    print_black(str(self._board[i][j].get_title()))
+                else:
+                    print('[ ]', end='')
+                print('-', end='')
+
+            if self._board[i][8].get_color() == 'red':
+                print_red(str(self._board[i][8].get_title()))
+            elif self._board[i][8].get_color() == 'black':
+                print_black(str(self._board[i][8].get_title()))
+            else:
+                print('[ ]', end='')
+            print_connections(i)
+
+        # Print River
+        print("\033[34;1m {}\033[00m".format(str(' ' * 14) + 'RIVER'))
+
+        # Print bottom half of board
+        for i in range(4, -1, -1):
             for j in range(8):
                 if self._board[i][j].get_color() == 'red':
                     print_red(str(self._board[i][j].get_title()))
@@ -482,29 +512,8 @@ class XiangqiGame:
                 print('[ ]', end='')
 
             print(' ', end='')
-            print_connections(i + 1)
+            print_connections(i)
 
-        # Print River
-        print("\033[34;1m {}\033[00m".format(str(' ' * 14) + 'RIVER'))
-
-        # Print half of board
-        for i in range(5, 10):
-            for j in range(8):
-                if self._board[i][j].get_color() == 'red':
-                    print_red(str(self._board[i][j].get_title()))
-                elif self._board[i][j].get_color() == 'black':
-                    print_black(str(self._board[i][j].get_title()))
-                else:
-                    print('[ ]', end='')
-                print('-', end='')
-
-            if self._board[i][8].get_color() == 'red':
-                print_red(str(self._board[i][8].get_title()))
-            elif self._board[i][8].get_color() == 'black':
-                print_black(str(self._board[i][8].get_title()))
-            else:
-                print('[ ]', end='')
-            print_connections(i + 1)
 
     def hlpr_list_moves(self, position):
         if self._helper_mode:
@@ -522,7 +531,8 @@ class XiangqiGame:
 
 
 def main():
-    return True
+    game = XiangqiGame()
+    game.print_board()
 
 
 if __name__ == '__main__':
