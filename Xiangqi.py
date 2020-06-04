@@ -293,19 +293,14 @@ class XiangqiGame:
 
         # Convert input to  position on board
         conversion_alpha = 'abcdefghi'
+        rank = int(board_position[1:]) - 1
 
-        if board_position[0] in conversion_alpha:
-
+        # Check for valid space
+        if board_position[0] in conversion_alpha and (0 <= rank < 10):
             file = conversion_alpha.index(board_position[0])
-            rank = int(board_position[1:]) - 1
+            return [rank, file]
 
-            if 0 <= rank <= 9:
-                return [rank, file]
-
-            else:
-                return False
-        else:
-            return False
+        return False
 
     def convert_to_user(self, position):
         no_keys = [x for x in range(10)]

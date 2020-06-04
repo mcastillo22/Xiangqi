@@ -26,39 +26,49 @@ def main():
     running = True
 
     while running:
-        print(game.get_turn().title() + ': ', end='')
-        moves = input()
-        moves = moves.lower()
+        if game.get_game_state() != 'UNFINISHED':
+            replay = input('Play again? ')
+            if replay.lower() in ['yes', 'y']:
+                main()
+            else:
+                print('Thanks for playing!')
+                running = False
 
-        if moves in ['0', 'quit', 'q']:
-            print('Thanks for playing!')
-            running = False
+        else:
+            print(game.get_turn().title() + ': ', end='')
+            moves = input()
+            moves = moves.lower()
 
-        h_move = moves.find('show')
-        if h_move == -1:
-
-            moves = moves.replace(' ', '')
-            end = moves.find(',')
-
-            if end != -1:
-                prev = moves[:end]
-                new = moves[end+1:]
-                game.make_move(prev, new)
-                game.print_board()
-                print()
-
-        elif h_move == 0:
-            end = moves.find(' ')
-            pos = game.convert(moves[end + 1:])
-
-            piece = game.get_piece_at_pos(pos)
-
-            if piece:
-                print('> ' + piece.get_name(piece.get_title()).title() + ' can move to ', end='')
-                print(game.hlpr_list_moves(pos))
+            if moves in ['0', 'quit', 'q']:
+                print('Thanks for playing!')
+                running = False
 
             else:
-                print("> There's no piece there!")
+                h_move = moves.find('show')
+                if h_move == -1:
+
+                    moves = moves.replace(' ', '')
+                    end = moves.find(',')
+
+                    if end != -1:
+                        prev = moves[:end]
+                        new = moves[end+1:]
+                        game.make_move(prev, new)
+                        game.print_board()
+                        print()
+
+                elif h_move == 0:
+                    end = moves.find(' ')
+                    pos = game.convert(moves[end + 1:])
+
+                    piece = game.get_piece_at_pos(pos)
+
+                    if piece:
+                        print('> ' + piece.get_name(piece.get_title()).title() + ' can move to ', end='')
+                        print(game.hlpr_list_moves(pos))
+
+                    else:
+                        print('> There\'s no piece there!')
 
 if __name__ == '__main__':
     main()
