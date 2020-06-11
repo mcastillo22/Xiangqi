@@ -11,14 +11,15 @@ class Piece:
         self._position = position  # Position on the board. Is None if captured.
         self._is_captured = False
         self._available_moves = None
+        self._temp_pos = None
 
-        self._names = {' R ': 'Rook',
-                       ' H ': 'Horse',
-                       ' E ': 'Elephant',
-                       ' A ': 'Advisor',
-                       ' G ': 'General',
-                       ' C ': 'Cannon',
-                       ' S ': 'Soldier'}
+        self._names = {'R': 'Rook',
+                       'H': 'Horse',
+                       'E': 'Elephant',
+                       'A': 'Advisor',
+                       'G': 'General',
+                       'C': 'Cannon',
+                       'S': 'Soldier'}
 
     def get_name(self, title):
         return self._names[title]
@@ -45,16 +46,16 @@ class Piece:
             new_file = position[1]
             self._position = [new_rank, new_file]
 
-    def captured(self, pieces):
+    def captured(self):
         """When a piece is captured, it is removed from the board and its position is reset."""
 
-        search = [piece for piece in pieces if piece.get_position() == self.get_position()]
-        pieces.remove(search[0])
+        self._temp_pos = self._position
         self._position = None
         self._is_captured = True
 
     def undo_capture(self):
         """If move places player in check, undo capture"""
+        self._position = self._temp_pos
         self._is_captured = False
 
     def check_facing_generals(self, pieces, desired_pos):
@@ -65,7 +66,7 @@ class Piece:
         self.update_position(desired_pos)
 
         # Get Generals' positions on board
-        gen_positions = [pos.get_position() for pos in pieces if pos.get_title()[1] == 'G']
+        gen_positions = [pos.get_position() for pos in pieces if pos.get_title() == 'G']
 
         # Check if Generals are on the same file
         if gen_positions[0][1] == gen_positions[1][1] and len(gen_positions) == 2:
