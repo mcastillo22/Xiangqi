@@ -6,14 +6,21 @@ general. This game is also known as Chinese Chess. A detailed description of rul
 ![Board](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/board.png) ![Board](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/board2.png)
 ![Helper Mode](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/helper.png)
 
-## Playing:
+## Prerequisites:
 * This game is played via the command line, and requires Python3
+* Python3 installation instructions can be found [here](https://realpython.com/installing-python/)
+
+## Playing:
+* Download Xiangqi.py, XiangqiPieces.py, and Xiangqi_CLI.py
 * Run Xiangqi_CLI.py to play
+  * For example: open a new command line and navigate to the directory where files have been downloaded
+  * Type `python3 Xiangqi_CLI.py` and hit `Enter`
 * Helper mode will display a list of positions that a designated piece can move to
 
 
 * Players take turns moving one piece of their army at a time using algebraic notation (ex: a1)
 * Red player goes first
+* Enter `0`, `quit`, or `q` at any prompt to quit
 
 ### The Board:
 * The board is separated into two camps- Black and Red.
@@ -63,12 +70,12 @@ For example, if a soldier crosses the River, it can move horizontally as well.
 * When a Soldier crosses the River, it may move one spot horizontally as well
 * Cannot retreat (move backward)
 
-### Special Rules:
+## Special Rules:
 * Moves cannot be made that leave the two Generals directly facing one another (no pieces in between)
 * In general, pieces capture pieces of the opposing army by moving to their position.
 * Winning involves checkmating the opposing camp (similar to western Chess)
 * This version uses 'ranks' to refer to rows, and 'files' to refer to columns.
 
-### Notes:
+## Notes:
 * This version does not implement perpetual check or chasing.
 * This version does not implement trading pieces in the beginning of the game
