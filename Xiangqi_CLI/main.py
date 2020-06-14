@@ -1,4 +1,4 @@
-from Xiangqi_CLI.Xiangqi import XiangqiGame
+from Xiangqi import XiangqiGame
 
 
 def main():
