@@ -12,10 +12,10 @@ general. This game is also known as Chinese Chess. A detailed description of rul
 * Python3 installation instructions can be found [here](https://realpython.com/installing-python/)
 
 ## Playing:
-* Download Xiangqi.py, XiangqiPieces.py, and Xiangqi_CLI.py
-* Run Xiangqi_CLI.py to play
+* Download files in Xiangqi_CLI foler (Xiangqi.py, XiangqiPieces.py, and main.py)
+* Run main.py to play
   * For example: open a new command line and navigate to the directory where files have been downloaded
-  * Type `python3 Xiangqi_CLI.py` and hit `Enter`
+  * Type `python3 main.py` and hit `Enter`
 * Helper mode will display a list of positions that a designated piece can move to
 
 

@@ -4,7 +4,7 @@
 #               enemy's general. This file includes Unit testing for Xiangqi Game
 
 import unittest
-from Xiangqi import XiangqiGame
+from Xiangqi_CLI.Xiangqi import XiangqiGame
 
 print()
 

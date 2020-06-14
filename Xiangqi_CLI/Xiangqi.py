@@ -4,7 +4,7 @@
 #              enemy's general.
 
 
-from XiangqiPieces import *
+from Xiangqi_CLI.XiangqiPieces import Piece, General, Advisor, Elephant, Horse, Rook, Cannon, Soldier
 
 
 class XiangqiGame:
