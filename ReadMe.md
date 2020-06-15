@@ -3,17 +3,24 @@
 A game of Xiangqi- a battle between two armies with the goal of capturing the enemy's
 general. This game is also known as Chinese Chess. A detailed description of rules and pieces can be found [here](https://en.wikipedia.org/wiki/Xiangqi).
 
+! [Gameboard](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/example.gif)
 ![Game Start](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/main.png)
-![Board](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/board.png) ![Board](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/board2.png)
 ![Helper Mode](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/helper.png)
 
 ## Prerequisites:
-* This game is played via the command line, and requires Python3
+* This game can be played via the command line or using GUI
+* Requires Python3
 * Python3 installation instructions can be found [here](https://realpython.com/installing-python/)
 
 ## Playing:
-* Download files in Xiangqi_CLI foler (Xiangqi.py, XiangqiPieces.py, and main.py)
-* Run main.py to play
+* For play on clickable board and icons:
+  * Download all files in Xiangqi_GUI folder
+  * Run main.py to play
+  * For example: open a new command line and navigate to the directory where files have been downloaded
+  * Type `python3 main.py` and hit `Enter`
+* For play on the Command Line:
+  * Download files in Xiangqi_CLI foler (Xiangqi.py, XiangqiPieces.py, and main.py)
+  * Run main.py to play
   * For example: open a new command line and navigate to the directory where files have been downloaded
   * Type `python3 main.py` and hit `Enter`
 * Helper mode will display a list of positions that a designated piece can move to
