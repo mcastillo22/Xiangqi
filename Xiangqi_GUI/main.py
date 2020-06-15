@@ -23,8 +23,8 @@ def main():
     highlighted_piece = None
 
     game = XiangqiGame()
-    game.set_helper_mode(False)
-    game.set_debug_mode(True)
+    game.set_helper_mode(True)
+    game.set_debug_mode(False)
     running = True
     
     while running:
