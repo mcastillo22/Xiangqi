@@ -23,7 +23,7 @@ def main():
 
     game = XiangqiGame()
     game.set_helper_mode(True)
-    game.set_debug_mode(True)
+    game.set_debug_mode(False)
     running = True
     
     while running:
@@ -67,6 +67,9 @@ def main():
                         if game.get_debug_mode():
                             print(pos1, pos2)
                             print(game.make_move(pos1, pos2))
+                        
+                        else:
+                            game.make_move(pos1, pos2)
                         
                         pos1 = None
                         pos2 = None
