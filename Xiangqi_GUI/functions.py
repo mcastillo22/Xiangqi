@@ -6,7 +6,7 @@ from Xiangqi import *
 def on_grid(x, y):
     """Checks that mouse has been clicked on an actual grid space on the gameboard"""
     for top_x in range(PIECE_POS0, SIZE[0] - PIECE_POS0, SQUARE_SPACE):
-        for top_y in range(PIECE_POS0, SIZE[1] - PIECE_POS0, SQUARE_SPACE):
+        for top_y in range(PIECE_POS0, SIZE[0] - PIECE_POS0 + SQUARE_SPACE, SQUARE_SPACE):
             box = pygame.Rect(top_x, top_y, ICON_SIZE, ICON_SIZE)
             if box.collidepoint(x, y):
                 return [top_x, top_y]
@@ -44,9 +44,9 @@ def display_moves(screen, game, board, position):
     moves = game.get_helper_moves(position)
     gameboard_moves = [(board[h[1]], board[SWITCH[h[0]]]) for h in moves]
 
-    # if game.get_debug_mode():
-    #     print(moves)
-    #     print(gameboard_moves)
+    if game.get_debug_mode():
+        print(moves)
+        print(gameboard_moves)
 
     for move in gameboard_moves:
         draw_dot(screen, move)
