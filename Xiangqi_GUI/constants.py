@@ -4,7 +4,7 @@ BLACK = "Black"
 BG_RED = (201, 90, 0)
 BOARD_YELLOW = (245, 172, 61)
 BLACKCOLOR = (0, 0, 0)
-WHITE = (255, 255, 255)
+GREEN = (59, 193, 74)
 BLUE = (0, 0, 255)
 REDCOLOR = (255, 0, 0)
 
