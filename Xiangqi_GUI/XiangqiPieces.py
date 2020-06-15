@@ -386,10 +386,10 @@ class Soldier(Piece):
             self._position = [new_rank, new_file]
 
             # If soldier has crossed the river, update River Status
-            if self.get_position()[0] > 4 and self.get_color() == 'red':
+            if self.get_position()[0] >=5 and self.get_color() == 'red':
                 self._is_past_river = True
 
-            if self.get_position()[0] <= 4 and self.get_color() == 'black':
+            elif self.get_position()[0] <= 4 and self.get_color() == 'black':
                 self._is_past_river = True
             
             else:
