@@ -7,6 +7,7 @@ from functions import *
 
 from Xiangqi import *
 
+
 def main():
     pygame.init()
     clock = pygame.time.Clock()
@@ -15,25 +16,30 @@ def main():
 
     BOARD = create_board()
 
-    pos1 = None
-    pos2 = None
+    pos1, pos2 = None, None
+    coordx, coordy = None, None
 
-    debugmode = True
     highlight = False
-    center_coords = None
 
     game = XiangqiGame()
+    game.set_helper_mode(True)
+    game.set_debug_mode(True)
     running = True
     
     while running:
 
         # Show icons in proper positions
         draw_gameboard(screen)
+
         if highlight:
-            highlight_piece(screen, center_coords)
+            highlight_piece(screen, (coordx, coordy))
+
         red_pieces = game.get_pieces(RED.lower())
         black_pieces = game.get_pieces(BLACK.lower())
         place_pieces(screen, red_pieces, black_pieces)
+
+        if highlight and pos1 is not None:
+            display_moves(screen, game, BOARD, pos1)
 
         turn = game.get_turn()
 
@@ -52,13 +58,13 @@ def main():
                         # Highlight piece if it is the right turn
                         if pos1 in get_piece_pos(game, turn):
                             highlight = highlight_on()
-                            center_coords = get_center(coordx, coordy)
-                            highlight_piece(screen, center_coords)
-                    
+                            highlight_piece(screen, (coordx, coordy))
+                            display_moves(screen, game, BOARD, pos1)
+
                     else:
                         pos2 = convert(BOARD, coordx, coordy)
 
-                        if debugmode:
+                        if game.get_debug_mode():
                             print(pos1, pos2)
                             print(game.make_move(pos1, pos2))
                         
@@ -71,6 +77,7 @@ def main():
 
     pygame.quit()
     sys.exit()
+
 
 if __name__ == '__main__':
     main()

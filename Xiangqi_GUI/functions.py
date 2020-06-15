@@ -14,10 +14,10 @@ def on_grid(x, y):
 
 def convert(board, x, y):
     """Converts screenboard grid to underlying board"""
-    row = board.index(y)
-    row = SWITCH.index(row)
-    col = board.index(x)
-    return [row, col]
+    rank = board.index(y)
+    rank = SWITCH.index(rank)
+    fil = board.index(x)
+    return [rank, fil]
 
 def get_piece_pos(game, turn):
     """Get list of positions for the correct turn"""
@@ -26,10 +26,28 @@ def get_piece_pos(game, turn):
     return pos
 
 def get_center(x, y):
-    return x + ICON_SIZE // 2 + 1, y + ICON_SIZE // 2 + 1
+    """Returns the center coords from the top left and top right coords"""
+    return x + SQUARE_SPACE // 2, y + SQUARE_SPACE // 2
 
 def highlight_piece(screen, position):
-    pygame.draw.circle(screen, BLACKCOLOR, position, int(ICON_SIZE // 1.55), 0)
+    circle = pygame.image.load('Images/circle.png')
+    screen.blit(circle, (position[0] - 2, position[1] - 2))
 
 def highlight_on():
     return True
+
+def draw_dot(screen, position):
+    center_pos = position[0] + SQUARE_SPACE // 2 - 3, position[1] + SQUARE_SPACE // 2 - 3
+    pygame.draw.circle(screen, GREEN, center_pos, 5, 0)
+
+def display_moves(screen, game, board, position):
+    moves = game.get_helper_moves(position)
+    gameboard_moves = [(board[h[1]], board[SWITCH[h[0]]]) for h in moves]
+
+    # if game.get_debug_mode():
+    #     print(moves)
+    #     print(gameboard_moves)
+
+    for move in gameboard_moves:
+        draw_dot(screen, move)
+    
