@@ -3,7 +3,7 @@
 A game of Xiangqi- a battle between two armies with the goal of capturing the enemy's
 general. This game is also known as Chinese Chess. A detailed description of rules and pieces can be found [here](https://en.wikipedia.org/wiki/Xiangqi).
 
-! [Gameboard](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/example.gif)
+![Gameboard](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/example.gif)
 ![Game Start](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/main.png)
 ![Helper Mode](https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/helper.png)
 
