@@ -1,9 +1,3 @@
-# Author: Marissa Castillo
-# Date: 02/22/2020
-# Description: A text-based program of the game Xiangqi- a battle between two armies with the goal of capturing the
-#              enemy's general.
-
-
 from XiangqiPieces import *
 
 
@@ -91,6 +85,9 @@ class XiangqiGame:
 
     def set_debug_mode(self, dbool):
         self._debug_mode = dbool
+
+    def get_debug_mode(self):
+        return self._debug_mode
 
     def add_turn(self):
         """Adds a single turn to the game."""
@@ -321,9 +318,6 @@ class XiangqiGame:
         moving_piece.update_position(new)
         self._board[new[0]][new[1]] = moving_piece
 
-        if self._debug_mode:
-            self.print_board()
-
         # Prevent player from making a move that puts themselves in check
         if self.is_in_check(self.get_turn()):
 
@@ -354,13 +348,16 @@ class XiangqiGame:
 
         return True
 
-    def hlpr_list_moves(self, position):
+    def get_helper_moves(self, position):
         """Returns a list of valid movements a piece in that passed position can make"""
         if self._helper_mode:
-            piece = self._board[position[0]][position[1]]
+            piece = self.get_piece_at_pos(position)
             avail_moves = piece.get_moves()
             legal_moves = [x for x in avail_moves if self.check_move(position, x)]
             legal_moves.sort()
+
+            if piece.get_type == 'Soldier':
+                piece.update_position(position)
 
             return legal_moves
 
@@ -370,8 +367,7 @@ class XiangqiGame:
 
 def main():
     game = XiangqiGame()
-    game.make_move((0,0),(2,0))
-    game.make_move((9,1),(7,2))
+
 
 if __name__ == '__main__':
     main()
