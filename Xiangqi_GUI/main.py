@@ -52,28 +52,32 @@ def main():
                 if event.button == 1:
                     mouse_x, mouse_y = event.pos
                     coordx, coordy = on_grid(mouse_x, mouse_y)
+
                     if pos1 is None:
                         pos1 = convert(BOARD, coordx, coordy)
 
                         # Highlight piece if it is the right turn
                         if pos1 in get_piece_pos(game, turn):
                             highlight = highlight_on()
-                            highlight_piece(screen, (coordx, coordy))
-                            display_moves(screen, game, BOARD, pos1)
 
                     else:
                         pos2 = convert(BOARD, coordx, coordy)
 
-                        if game.get_debug_mode():
-                            print(pos1, pos2)
-                            print(game.make_move(pos1, pos2))
+                        if pos2 in get_piece_pos(game, turn):
+                            pos1 = pos2
+                            pos2 = None
                         
                         else:
-                            game.make_move(pos1, pos2)
+                            if game.get_debug_mode():
+                                print(pos1, pos2)
+                                print(game.make_move(pos1, pos2))
+                            
+                            else:
+                                game.make_move(pos1, pos2)
                         
-                        pos1 = None
-                        pos2 = None
-                        highlight = False
+                            pos1 = None
+                            pos2 = None
+                            highlight = False
     
 
         pygame.display.update()
