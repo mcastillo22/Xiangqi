@@ -51,3 +51,6 @@ def display_moves(screen, game, board, position):
     for move in gameboard_moves:
         draw_dot(screen, move)
     
+def display_actions(screen, game, font_obj, action):
+    text_obj = font_obj.render(action, True, WHITE)
+    screen.blit(text_obj, (X1 + SQUARE_SPACE * 5, Y2 + SQUARE_SPACE))
