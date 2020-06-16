@@ -342,7 +342,6 @@ class XiangqiGame:
             self._turn -= 1
             self.update_game_state(self.get_turn())
 
-        # For debugging:
         self._rcheck = self.is_in_check('red')
         self._bcheck = self.is_in_check('black')
 
@@ -364,6 +363,15 @@ class XiangqiGame:
         else:
             return False
 
+    def in_check(self):
+        if self._rcheck:
+            return 'Red in check!'
+
+        elif self._bcheck:
+            return 'Black in check!'
+
+        else:
+            return False
 
 def main():
     game = XiangqiGame()

@@ -25,18 +25,18 @@ def draw_gameboard(screen):
         }
 
         for coords in border.values():
-            draw_func(coords[0], coords[1], 5)
+            draw_func(coords[0], coords[1], 4)
 
     def draw_ranks():
         """Draw rank (row) lines"""
         for y in range(SQUARE_SPACE + Y1, Y2-1, SQUARE_SPACE):
-            pygame.draw.line(screen, BLACKCOLOR, [X1, y], [X2, y], 2)
+            pygame.draw.line(screen, BLACKCOLOR, [X1, y], [X2, y], 1)
 
     def draw_files():
         """Draw files (columns) lines"""
         for x in range(SQUARE_SPACE + Y1, X2-1, SQUARE_SPACE):
-            pygame.draw.line(screen, BLACKCOLOR, [x, Y1], [x, Y1 + 4 * SQUARE_SPACE], 2)
-            pygame.draw.line(screen, BLACKCOLOR, [x, PX2], [x, Y2], 2)
+            pygame.draw.line(screen, BLACKCOLOR, [x, Y1], [x, Y1 + 4 * SQUARE_SPACE], 1)
+            pygame.draw.line(screen, BLACKCOLOR, [x, PX2], [x, Y2], 1)
 
     def draw_palace():
         """Draw palace lines"""
@@ -49,10 +49,11 @@ def draw_gameboard(screen):
         }
 
         for coords in palace.values():
-            draw_func(coords[0], coords[1], 2)
+            draw_func(coords[0], coords[1], 1)
 
     screen.fill(BG_RED)
-    pygame.draw.rect(screen, BOARD_YELLOW, [X1, Y1, SQUARE_SPACE * 8, SQUARE_SPACE * 9])
+    pygame.draw.rect(screen, BOARD_YELLOW, (X1, Y1, SQUARE_SPACE * 8, SQUARE_SPACE * 9))
+    pygame.draw.rect(screen, BLUE, (X1, Y1 + SQUARE_SPACE * 4, SQUARE_SPACE * 8, SQUARE_SPACE))
     draw_borders()
     draw_ranks()
     draw_files()
@@ -103,3 +104,6 @@ def place_pieces(screen, red, black):
     blit_pieces(screen, red, red_icons, True)
     blit_pieces(screen, black, black_icons, False)
 
+def display_turn(screen, font_obj, turn):
+    turn_text = font_obj.render(f'Turn: {turn.title()}', True, WHITE)
+    screen.blit(turn_text, (X1, Y2 + SQUARE_SPACE))

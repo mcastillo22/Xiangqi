@@ -13,6 +13,7 @@ def main():
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode(SIZE)
     pygame.display.set_caption('Xiangqi')
+    font_obj = pygame.font.SysFont('Calibri', 28)
 
     BOARD = create_board()
 
@@ -43,6 +44,10 @@ def main():
             display_moves(screen, game, BOARD, pos1)
 
         turn = game.get_turn()
+        display_turn(screen, font_obj, turn)
+
+        if game.in_check() is not False:
+            display_actions(screen, game, font_obj, game.in_check())
 
         clock.tick(60)
         for event in pygame.event.get():
