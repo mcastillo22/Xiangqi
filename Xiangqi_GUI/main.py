@@ -46,8 +46,11 @@ def main():
         turn = game.get_turn()
         display_turn(screen, font_obj, turn)
 
-        if game.in_check() is not False:
-            display_actions(screen, game, font_obj, game.in_check())
+        if game.get_status() is not False:
+            display_actions(screen, game, font_obj, game.get_status())        
+            if game.get_game_state() != 'UNFINISHED':
+                turn = None
+                highlight = False
 
         clock.tick(60)
         for event in pygame.event.get():

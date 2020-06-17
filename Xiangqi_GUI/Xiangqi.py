@@ -185,9 +185,22 @@ class XiangqiGame:
         else:
             return False
 
+    def palace_check(self, player):
+        """If only remaining pieces are general/advisor, player loses"""
+        types = list(set([p.get_type() for p in self.get_pieces(player)]))
+        non_palace = ['Rook', 'Horse', 'Elephant', 'Cannon', 'Soldier']
+        for np in non_palace:
+            if np in types:
+                return False
+
+        return True
+
     def check_for_checkmate(self, player):
         """Checks to see if there are any valid moves left. If there are, see if there are moves that take their
         General out of check for all active pieces of the given player"""
+
+        if self.palace_check(player):
+            return True
 
         # Get a dictionary of active pieces, their position, and their possible movesets
         pieces = {piece: [piece.get_position(), piece.get_moves()] for piece in self.get_pieces(player)
@@ -363,12 +376,17 @@ class XiangqiGame:
         else:
             return False
 
-    def in_check(self):
-        if self._rcheck:
-            return 'Red in check!'
+    def get_status(self):
+        if self._game_state == 'UNFINISHED':
+            if self._rcheck:
+                return 'Red in check!'
+            elif self._bcheck:
+                return 'Black in check!'
 
-        elif self._bcheck:
-            return 'Black in check!'
+        if self._game_state == 'RED_WON':
+            return 'Red Won!'
+        elif self._game_state == 'BLACK_WON':
+            return 'Black Won!'
 
         else:
             return False
