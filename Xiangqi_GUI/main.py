@@ -9,6 +9,23 @@ from Xiangqi import *
 
 
 def main():
+    """
+    Version 1.5
+    An object of a text-based game of Xiangqi- a battle between two armies with the goal of capturing the enemy's
+    general. A river separates the two armies, and affects Piece movement. Generals and Advisors are limited to their
+    respective palace. This game is also known as Chinese Chess.
+
+    Players take turns moving one piece of their army at a time using algebraic notation.
+    Red player goes first.
+    Moves cannot be made that leave the two Generals directly facing one another (no pieces in between)
+    In general, pieces capture pieces of the opposing army by moving to their position.
+    Winning involves checkmating the opposing camp. Stalemates can also occur.
+
+    This version allows movement based only on algebraic notation.
+    This version does not implement perpetual check or chasing.
+    This version uses 'ranks' to refer to rows, and 'files' to refer to columns.
+    """
+
     pygame.init()
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode(SIZE)

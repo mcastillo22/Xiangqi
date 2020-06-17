@@ -2,22 +2,7 @@ from XiangqiPieces import *
 
 
 class XiangqiGame:
-    """
-    Version 1.0
-    An object of a text-based game of Xiangqi- a battle between two armies with the goal of capturing the enemy's
-    general. A river separates the two armies, and affects Piece movement. Generals and Advisors are limited to their
-    respective palace. This game is also known as Chinese Chess.
-
-    Players take turns moving one piece of their army at a time using algebraic notation.
-    Red player goes first.
-    Moves cannot be made that leave the two Generals directly facing one another (no pieces in between)
-    In general, pieces capture pieces of the opposing army by moving to their position.
-    Winning involves checkmating the opposing camp. Stalemates can also occur.
-
-    This version allows movement based only on algebraic notation.
-    This version does not implement perpetual check or chasing.
-    This version uses 'ranks' to refer to rows, and 'files' to refer to columns.
-    """
+    """The Xiangqi Game Engine"""
 
     def __init__(self):
         """Initialize game state, checkmate status, turn, captured pieces, playing pieces, and board"""
@@ -133,13 +118,16 @@ class XiangqiGame:
         else:
             return False
 
+    def get_opposing(self, player):
+        if player == 'red':
+            return 'black'
+        else:
+            return 'red'
+
     def is_in_check(self, player):
         """Determines if a player is in check- the General is in a position that allows them to be captured"""
 
-        if player == 'red':
-            opposing = 'black'
-        else:
-            opposing = 'red'
+        opposing = self.get_opposing(player)
 
         # Get player's General's position
         gen_position = [gen.get_position() for gen in self.get_pieces(player) if gen.get_title() == 'G'][0]
@@ -187,6 +175,7 @@ class XiangqiGame:
 
     def palace_check(self, player):
         """If only remaining pieces are general/advisor, player loses"""
+
         types = list(set([p.get_type() for p in self.get_pieces(player)]))
         non_palace = ['Rook', 'Horse', 'Elephant', 'Cannon', 'Soldier']
         for np in non_palace:
@@ -253,16 +242,11 @@ class XiangqiGame:
         """If a player is in check, this method determines if a move can be made to capture the attacking piece(s)."""
 
         # Get General and its position
-        general = [gen for gen in self.get_pieces(player) if gen.get_title() == 'G']
-        general = general[0]
+        general = [gen for gen in self.get_pieces(player) if gen.get_title() == 'G'][0]
         gen_pos = general.get_position()
 
         # Check if attacking piece/pieces can be taken
-        #   Get opposing color
-        if player == 'red':
-            opposing = 'black'
-        else:
-            opposing = 'red'
+        opposing = self.get_opposing(player)
 
         #   Get all opposing pieces in play
         opposing_moves = [op.get_position() for op in self.get_pieces(opposing)]
@@ -348,17 +332,21 @@ class XiangqiGame:
 
             return False
 
-        self.add_turn()
-
         # Update game state by checking if there is a checkmate or stalemate
+        self.perform_update()
+
+        return True
+
+    def perform_update(self):
+        """Perform update to game status if there are any"""
+        self.add_turn()
+        
         if self.check_for_checkmate(self.get_turn()):
             self._turn -= 1
             self.update_game_state(self.get_turn())
 
         self._rcheck = self.is_in_check('red')
         self._bcheck = self.is_in_check('black')
-
-        return True
 
     def get_helper_moves(self, position):
         """Returns a list of valid movements a piece in that passed position can make"""
@@ -377,6 +365,7 @@ class XiangqiGame:
             return False
 
     def get_status(self):
+        """Return Game Status for GUI"""
         if self._game_state == 'UNFINISHED':
             if self._rcheck:
                 return 'Red in check!'
