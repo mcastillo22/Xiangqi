@@ -33,6 +33,7 @@ def main():
         # Show icons in proper positions
         draw_gameboard(screen)
 
+        # Highlight active piece
         if highlight:
             highlight_piece(screen, highlighted_piece)
 
@@ -40,12 +41,15 @@ def main():
         black_pieces = game.get_pieces(BLACK.lower())
         place_pieces(screen, red_pieces, black_pieces)
 
+        # Show available moves for active piece
         if highlight and pos1 is not None:
             display_moves(screen, game, BOARD, pos1)
 
+        # Display current player whose turn it is
         turn = game.get_turn()
         display_turn(screen, font_obj, turn)
 
+        # Display game status (player in check, player won, etc.)
         if game.get_status() is not False:
             display_actions(screen, game, font_obj, game.get_status())        
             if game.get_game_state() != 'UNFINISHED':
