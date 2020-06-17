@@ -102,7 +102,7 @@ class XiangqiGame:
 
     def update_game_state(self, player):
         """Updates game state: 'UNFINISHED'; 'RED_WON' or 'BLACK_WON' if there is a checkmate."""
-        self._game_state = player.upper() + '_WON'
+        self._game_state = player.title() + ' Won'
         return True
 
     def get_game_state(self):
@@ -119,10 +119,10 @@ class XiangqiGame:
             return False
 
     def get_opposing(self, player):
-        if player == 'red':
-            return 'black'
+        if player == RED.lower():
+            return BLACK.lower()
         else:
-            return 'red'
+            return RED.lower()
 
     def is_in_check(self, player):
         """Determines if a player is in check- the General is in a position that allows them to be captured"""
@@ -156,7 +156,6 @@ class XiangqiGame:
             target_piece = self.get_piece_at_pos(target_position)
 
             if target_piece.get_color() != moving_piece.get_color():
-
                 temp = moving_piece.get_position()
 
                 # Determine if move is valid based on piece's own specific rules
@@ -169,7 +168,6 @@ class XiangqiGame:
 
             else:
                 return False
-
         else:
             return False
 
@@ -178,6 +176,7 @@ class XiangqiGame:
 
         types = list(set([p.get_type() for p in self.get_pieces(player)]))
         non_palace = ['Rook', 'Horse', 'Elephant', 'Cannon', 'Soldier']
+        
         for np in non_palace:
             if np in types:
                 return False
@@ -345,8 +344,8 @@ class XiangqiGame:
             self._turn -= 1
             self.update_game_state(self.get_turn())
 
-        self._rcheck = self.is_in_check('red')
-        self._bcheck = self.is_in_check('black')
+        self._rcheck = self.is_in_check(RED.lower())
+        self._bcheck = self.is_in_check(BLACK.lower())
 
     def get_helper_moves(self, position):
         """Returns a list of valid movements a piece in that passed position can make"""
@@ -371,14 +370,10 @@ class XiangqiGame:
                 return 'Red in check!'
             elif self._bcheck:
                 return 'Black in check!'
-
-        if self._game_state == 'RED_WON':
-            return 'Red Won!'
-        elif self._game_state == 'BLACK_WON':
-            return 'Black Won!'
-
-        else:
             return False
+
+        return self.get_game_state() + '!'
+
 
 def main():
     game = XiangqiGame()
