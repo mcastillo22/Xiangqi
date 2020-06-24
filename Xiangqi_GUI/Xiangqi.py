@@ -62,9 +62,10 @@ class XiangqiGame:
     def set_board_pieces(self, army):
         """Places the passed army onto board during initialization"""
         for name, piece in army.items():
-            rank = piece.get_position()[0]
-            file = piece.get_position()[1]
-            self._board[rank][file] = piece
+            if piece.get_position() is not None:
+                rank = piece.get_position()[0]
+                file = piece.get_position()[1]
+                self._board[rank][file] = piece
 
     def set_helper_mode(self, hbool):
         """When the user requests the helper mode with the CLI.
@@ -360,6 +361,7 @@ class XiangqiGame:
         self._temp = dict(zip(names, positions))
 
     def undo(self):
+        """Returns board to its previous state before the last move was made"""
         self._board = [[Piece() for file in range(9)] for rank in range(10)]
         for name, pos in self._temp.items():
             self._pieces[name].update_position(pos)

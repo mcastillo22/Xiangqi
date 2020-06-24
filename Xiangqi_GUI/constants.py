@@ -22,6 +22,8 @@ PIECE_POS0 = SQUARE_SPACE // 3 + 1
 ICON_SIZE = 45
 
 BUTTON_SIZE = 25
+BUTTONS_Y = int(Y2 + SQUARE_SPACE * 1.33)
+STATUS_X = X1 + SQUARE_SPACE * 5
 
 NAMES = {'R': 'Rook',
          'H': 'Horse',

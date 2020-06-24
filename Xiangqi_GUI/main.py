@@ -3,6 +3,7 @@ from pygame.locals import  *
 
 from constants import *
 from setup import *
+from visual_setup import *
 from functions import *
 from highlight_function import *
 
@@ -11,7 +12,7 @@ from Xiangqi import *
 
 def main():
     """
-    Version 1.5
+    Version 1.7
     An object of a text-based game of Xiangqi- a battle between two armies with the goal of capturing the enemy's
     general. A river separates the two armies, and affects Piece movement. Generals and Advisors are limited to their
     respective palace. This game is also known as Chinese Chess.
@@ -41,37 +42,36 @@ def main():
     highlight = False
     highlighted_piece = None
 
-    game = XiangqiGame()
-    game.set_helper_mode(True)
-    game.set_debug_mode(False)
+    GAME = create_new_game()
     running = True
     
     while running:
 
-        # Show icons in proper positions
+        # Draw gameboard grid and buttons
         draw_gameboard(screen)
-        display_buttons(screen, game, font_obj)
+        display_buttons(screen, GAME)
 
         # Highlight active piece
         if highlight:
             highlight_piece(screen, highlighted_piece)
-
-        red_pieces = game.get_pieces(RED.lower())
-        black_pieces = game.get_pieces(BLACK.lower())
+        
+        # Show icons in proper positions
+        red_pieces = GAME.get_pieces(RED.lower())
+        black_pieces = GAME.get_pieces(BLACK.lower())
         place_pieces(screen, red_pieces, black_pieces)
 
         # Show available moves for active piece
         if highlight and pos1 is not None:
-            display_moves(screen, game, BOARD, pos1)
+            display_moves(screen, GAME, BOARD, pos1)
 
-        # Display current player whose turn it is
-        turn = game.get_turn()
+        # Display the current player whose turn it is
+        turn = GAME.get_turn()
         display_turn(screen, font_obj, turn)
 
         # Display game status (player in check, player won, etc.)
-        if game.get_status() is not False:
-            display_status(screen, game, font_obj, game.get_status())        
-            if game.get_game_state() != 'UNFINISHED':
+        if GAME.get_status() is not False:
+            display_status(screen, GAME, font_obj, GAME.get_status())        
+            if GAME.get_game_state() != 'UNFINISHED':
                 turn = None
                 highlight = False
 
@@ -84,7 +84,9 @@ def main():
                 if event.button == 1:
                     mouse_x, mouse_y = event.pos
 
-                    check_undo_button(game, mouse_x, mouse_y)
+                    check_undo_button(GAME, mouse_x, mouse_y)
+                    if check_new_game(GAME, mouse_x, mouse_y):
+                        GAME = create_new_game()
 
                     coordx, coordy = on_grid(mouse_x, mouse_y)
                     in_board = coordx is not None and coordy is not None
@@ -93,7 +95,7 @@ def main():
                         pos1 = convert(BOARD, coordx, coordy)
 
                         # Highlight piece if it is the right turn
-                        if pos1 in get_piece_pos(game, turn):
+                        if pos1 in get_piece_pos(GAME, turn):
                             highlight = True
                             highlighted_piece = coordx, coordy
                         
@@ -108,13 +110,13 @@ def main():
                         elif in_board:
                             pos2 = convert(BOARD, coordx, coordy)
 
-                            if pos2 in get_piece_pos(game, turn):
+                            if pos2 in get_piece_pos(GAME, turn):
                                 pos1, pos2 = pos2, None
                                 highlighted_piece = coordx, coordy
 
                             else:
-                                game.make_temp()
-                                game.make_move(pos1, pos2)
+                                GAME.make_temp()
+                                GAME.make_move(pos1, pos2)
                                 
                                 pos1, pos2 = None, None
                                 highlight = False

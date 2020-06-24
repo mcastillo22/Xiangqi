@@ -31,10 +31,18 @@ def get_center(x, y):
     return x + SQUARE_SPACE // 2, y + SQUARE_SPACE // 2
 
 def check_undo_button(game, x, y):
+    """Checks if undo button was clicked"""
     button = pygame.Rect(X1, int(Y2 + SQUARE_SPACE * 1.25), BUTTON_SIZE, BUTTON_SIZE)
     if button.collidepoint(x, y):
         game.undo()
 
+def check_new_game(game, x, y):
+    """Checks if new game button was clicked"""
+    button = pygame.Rect(STATUS_X, int(Y2 + SQUARE_SPACE * 1.25), BUTTON_SIZE, BUTTON_SIZE)
+    if button.collidepoint(x, y):
+        return True
+
 def display_status(screen, game, font_obj, action):
+    """Displays text of game status (check, who won, etc)"""
     text_obj = font_obj.render(action, True, WHITE)
-    screen.blit(text_obj, (X1 + SQUARE_SPACE * 5, Y2 + SQUARE_SPACE // 2))
+    screen.blit(text_obj, (STATUS_X, Y2 + SQUARE_SPACE // 2))
