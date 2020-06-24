@@ -4,6 +4,7 @@ from pygame.locals import  *
 from constants import *
 from setup import *
 from functions import *
+from highlight_function import *
 
 from Xiangqi import *
 
@@ -49,6 +50,7 @@ def main():
 
         # Show icons in proper positions
         draw_gameboard(screen)
+        display_buttons(screen, game, font_obj)
 
         # Highlight active piece
         if highlight:
@@ -68,7 +70,7 @@ def main():
 
         # Display game status (player in check, player won, etc.)
         if game.get_status() is not False:
-            display_actions(screen, game, font_obj, game.get_status())        
+            display_status(screen, game, font_obj, game.get_status())        
             if game.get_game_state() != 'UNFINISHED':
                 turn = None
                 highlight = False
@@ -81,6 +83,9 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     mouse_x, mouse_y = event.pos
+
+                    check_undo_button(game, mouse_x, mouse_y)
+
                     coordx, coordy = on_grid(mouse_x, mouse_y)
                     in_board = coordx is not None and coordy is not None
 
@@ -89,7 +94,7 @@ def main():
 
                         # Highlight piece if it is the right turn
                         if pos1 in get_piece_pos(game, turn):
-                            highlight = highlight_on()
+                            highlight = True
                             highlighted_piece = coordx, coordy
                         
                         else:
@@ -108,6 +113,7 @@ def main():
                                 highlighted_piece = coordx, coordy
 
                             else:
+                                game.make_temp()
                                 game.make_move(pos1, pos2)
                                 
                                 pos1, pos2 = None, None

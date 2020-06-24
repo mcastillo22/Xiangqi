@@ -9,7 +9,7 @@ BLUE         = ( 74, 139, 204)
 REDCOLOR     = (255,   0,   0)
 WHITE        = (255, 255, 255)
 
-SIZE = (504, 617)
+SIZE = (504, 627)
 
 SQUARE_SPACE = 53
 X1, Y1 = 40, 40
@@ -20,6 +20,8 @@ REDP_OFFSET = SQUARE_SPACE * 7  # For Red Palace
 
 PIECE_POS0 = SQUARE_SPACE // 3 + 1
 ICON_SIZE = 45
+
+BUTTON_SIZE = 25
 
 NAMES = {'R': 'Rook',
          'H': 'Horse',

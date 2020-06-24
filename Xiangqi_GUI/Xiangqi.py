@@ -51,10 +51,13 @@ class XiangqiGame:
 
         # Modes:
         self._helper_mode = False
-
         self._debug_mode = False
+
         self._bcheck = False
         self._rcheck = False
+
+        self._temp_piece = None
+        self._temp_piece2 = None
 
     def set_board_pieces(self, army):
         """Places the passed army onto board during initialization"""
@@ -86,6 +89,9 @@ class XiangqiGame:
             return 'red'
         else:
             return 'black'
+
+    def get_turn_num(self):
+        return self._turn
 
     def get_pieces(self, color=None):
         """Returns a list of pieces that are in play in the board.
@@ -347,6 +353,20 @@ class XiangqiGame:
         self._rcheck = self.is_in_check(RED.lower())
         self._bcheck = self.is_in_check(BLACK.lower())
 
+    def make_temp(self):
+        """Make a copy of the board and pieces if user wants to 'undo'"""
+        names = [p for p in self._pieces.keys()]
+        positions = [p.get_position() for p in self._pieces.values()]
+        self._temp = dict(zip(names, positions))
+
+    def undo(self):
+        self._board = [[Piece() for file in range(9)] for rank in range(10)]
+        for name, pos in self._temp.items():
+            self._pieces[name].update_position(pos)
+        self.set_board_pieces(self._pieces)
+        self._temp = None
+        self._turn -= 1
+
     def get_helper_moves(self, position):
         """Returns a list of valid movements a piece in that passed position can make"""
         if self._helper_mode:
@@ -372,7 +392,7 @@ class XiangqiGame:
                 return 'Black in check!'
             return False
 
-        return self.get_game_state() + '!'
+        return f'{self.get_game_state()} in {self.get_turn_num()//2} moves!'
 
 
 def main():

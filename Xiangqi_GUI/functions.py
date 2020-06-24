@@ -3,6 +3,7 @@ from pygame.locals import  *
 from constants import *
 from Xiangqi import *
 
+
 def on_grid(x, y):
     """Checks that mouse has been clicked on an actual grid space on the gameboard"""
     for top_x in range(PIECE_POS0, SIZE[0] - PIECE_POS0, SQUARE_SPACE):
@@ -29,28 +30,11 @@ def get_center(x, y):
     """Returns the center coords from the top left and top right coords"""
     return x + SQUARE_SPACE // 2, y + SQUARE_SPACE // 2
 
-def highlight_piece(screen, position):
-    circle = pygame.image.load('Images/circle.png')
-    screen.blit(circle, (position[0] - 2, position[1] - 2))
+def check_undo_button(game, x, y):
+    button = pygame.Rect(X1, int(Y2 + SQUARE_SPACE * 1.25), BUTTON_SIZE, BUTTON_SIZE)
+    if button.collidepoint(x, y):
+        game.undo()
 
-def highlight_on():
-    return True
-
-def draw_dot(screen, position):
-    center_pos = position[0] + SQUARE_SPACE // 2 - 3, position[1] + SQUARE_SPACE // 2 - 3
-    pygame.draw.circle(screen, GREEN, center_pos, 5, 0)
-
-def display_moves(screen, game, board, position):
-    moves = game.get_helper_moves(position)
-    gameboard_moves = [(board[h[1]], board[SWITCH[h[0]]]) for h in moves]
-
-    if game.get_debug_mode():
-        print(moves)
-        print(gameboard_moves)
-
-    for move in gameboard_moves:
-        draw_dot(screen, move)
-    
-def display_actions(screen, game, font_obj, action):
+def display_status(screen, game, font_obj, action):
     text_obj = font_obj.render(action, True, WHITE)
-    screen.blit(text_obj, (X1 + SQUARE_SPACE * 5, Y2 + SQUARE_SPACE))
+    screen.blit(text_obj, (X1 + SQUARE_SPACE * 5, Y2 + SQUARE_SPACE // 2))

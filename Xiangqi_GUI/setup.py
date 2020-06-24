@@ -106,4 +106,15 @@ def place_pieces(screen, red, black):
 
 def display_turn(screen, font_obj, turn):
     turn_text = font_obj.render(f'Turn: {turn.title()}', True, WHITE)
-    screen.blit(turn_text, (X1, Y2 + SQUARE_SPACE))
+    screen.blit(turn_text, (X1, int(Y2 + SQUARE_SPACE // 1.25)))
+
+def display_buttons(screen, game, font_obj):
+    create_undo(screen, game, font_obj)
+
+def create_undo(screen, game, font_obj):
+    y = int(Y2 + SQUARE_SPACE * 1.33)
+    if game.get_turn_num() > 0 and game._temp is not None:
+            undo = pygame.image.load('Images/undo.png')
+            screen.blit(undo, (X1, y))
+            undo_text = font_obj.render('Undo Move', True, BLACKCOLOR)
+            screen.blit(undo_text, (X1 + BUTTON_SIZE + 10, int(y + BUTTON_SIZE // 3)))
