@@ -9,6 +9,7 @@ def create_board():
     return [x for x in range(PIECE_POS0, SIZE[0], SQUARE_SPACE)]
 
 def create_new_game():
+    """Creates new game object"""
     new_obj = XiangqiGame()
     new_obj.set_helper_mode(True)
     new_obj.set_debug_mode(False)

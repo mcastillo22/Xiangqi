@@ -38,11 +38,16 @@ def check_undo_button(game, x, y):
 
 def check_new_game(game, x, y):
     """Checks if new game button was clicked"""
-    button = pygame.Rect(STATUS_X, int(Y2 + SQUARE_SPACE * 1.25), BUTTON_SIZE, BUTTON_SIZE)
+    button = pygame.Rect(TEXT2_X, int(Y2 + SQUARE_SPACE * 1.25), BUTTON_SIZE, BUTTON_SIZE)
     if button.collidepoint(x, y):
         return True
 
 def display_status(screen, game, font_obj, action):
     """Displays text of game status (check, who won, etc)"""
     text_obj = font_obj.render(action, True, WHITE)
-    screen.blit(text_obj, (STATUS_X, Y2 + SQUARE_SPACE // 2))
+   
+    action = action.lower()
+    if action.find('WON') != -1:
+        screen.blit(text_obj, (TEXT1_X, TEXT_Y))
+    else:
+        screen.blit(text_obj, (TEXT2_X, TEXT_Y))
