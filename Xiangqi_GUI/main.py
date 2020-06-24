@@ -102,15 +102,15 @@ def main():
                         else:
                             pos1 = None
 
-                    else:
-                        if pos1 == pos2:
-                            pos1, pos2 = None, None
-                            highlight = False
-                        
-                        elif in_board:
+                    else:                        
+                        if in_board:
                             pos2 = convert(BOARD, coordx, coordy)
 
-                            if pos2 in get_piece_pos(GAME, turn):
+                            if pos1 == pos2:
+                                pos1, pos2 = None, None
+                                highlight = False
+
+                            elif pos2 in get_piece_pos(GAME, turn):
                                 pos1, pos2 = pos2, None
                                 highlighted_piece = coordx, coordy
 

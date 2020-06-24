@@ -47,7 +47,7 @@ def display_status(screen, game, font_obj, action):
     text_obj = font_obj.render(action, True, WHITE)
    
     action = action.lower()
-    if action.find('WON') != -1:
+    if action.find('won') != -1:
         screen.blit(text_obj, (TEXT1_X, TEXT_Y))
     else:
         screen.blit(text_obj, (TEXT2_X, TEXT_Y))
