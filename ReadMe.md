@@ -5,7 +5,6 @@ general. This game is also known as Chinese Chess. A detailed description of rul
 <p align="center">
 <img src="https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/example.gif"><img src="https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/undo.gif"><img src="https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/check.gif"><br>
 <img src="https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/main.png">
-<img src="https://raw.githubusercontent.com/mcastillo22/Xiangqi/master/Screenshots/helper.png">
 </p>
 
 ## Prerequisites:
